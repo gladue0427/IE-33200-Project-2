@@ -1,3 +1,14 @@
+library(tidyverse)
+library(keras)
+library(tensorflow)
+library(reticulate)
+
+## RUN SEPARATELY ##
+install_tensorflow(extra_packages="pillow")
+
+## RUN SEPARATELY ##
+install_keras()
+
 res=c("","")
 f=list.files("./grass")
 for (i in f){
