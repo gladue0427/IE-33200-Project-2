@@ -12,7 +12,7 @@ install_tensorflow(extra_packages="pillow")
 ## RUN SEPARATELY ##
 install_keras()
 
-model <- load_model_tf("model/dandelion_model")
+model <- load_model_tf("dandelion_model")
 
 res=c("","")
 width <- 224
@@ -24,14 +24,38 @@ f_grass <- list.files("data-for-332/grass")
 
 test_image <- image_load(paste("data-for-332/grass/",f_grass[1],sep=""),
                          target_size = target_size)
+y <- image_load(paste("data-for-332/grass/",f_grass[8],sep=""),
+              target_size = target_size)
+y <- image_to_array(y)
+y <- y/255
+y_inv <- y
+y_test <- array_reshape(y, c(1, dim(y)))
+model %>% predict(y_test)
+plot(1:224, 1:224, type = "n")
+rasterImage(as.raster(y), 1, 1, 224, 224)
+
+y_inv <- y
+y_inv[,,1] <- abs(y_inv[,,1] - y_inv[,,2])
+y_inv[abs(y[,,1] - y[,,2]) < 0.1] <- 0
+y_inv_test <- array_reshape(y_inv, c(1, dim(y_inv)))
+model %>% predict(y_inv_test)
+
+y_rast <- as.raster(y_inv)
+plot(1:224, 1:224, type = "n")
+rasterImage(y_rast, 1, 1, 224, 224)
+
+
 x <- image_to_array(test_image)
 x <- array_reshape(x, c(1, dim(x)))
 x <- x/255
-fgsm_adversify(x, 1)
-
 pred <- model %>% predict(x)
-
-
+label <- tf$one_hot(208)
+tf$keras$Model$predict(model, x)
+tensor_image <- to_tensor(paste("data-for-332/grass/",f_grass[1],sep=""))
+labels <- tf$constant(c(as.integer(0), as.integer(1)), shape=c(as.integer(1), as.integer(2)), dtype=tf$int32)
+perturbation <- fgsm_adversify(tf$reshape(tensor_image, shape=c(as.integer(1), as.integer(224), as.integer(224), as.integer(3))), labels)
+perturbation <- tf$reshape(perturbation, shape=c(as.integer(224), as.integer(224), as.integer(3)))
+display_image_tensor(perturbation * 0.5 + 0.5)
 print(pred)
 
 for (i in f){
