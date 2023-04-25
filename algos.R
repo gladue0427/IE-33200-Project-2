@@ -5,8 +5,9 @@ reduceUpperExtremities <- function(x, pixel_budget) {
   return(ext_removed)
 }
 
-convert_mostGreen_to_yellow <- function(y, pixel_budget=0.01) {
-  greenNess <- abs(y[,,2] - y[,,1])
+convert_mostGreen_to_yellow <- function(x, pixel_budget=0.01) {
+  y <- x
+  greenNess <- y[,,2] - y[,,1] - y[,,3]
   cutoff <- quantile(greenNess, 1 - pixel_budget, type=1)
   most_green <- which(greenNess > cutoff, arr.ind=TRUE)
   for (i in 1:dim(most_green)[1]) {
@@ -18,7 +19,7 @@ convert_mostGreen_to_yellow <- function(y, pixel_budget=0.01) {
     
     y[pixel[1], pixel[2], 3] <- 0
   }
-  return(dim(most_green)[1])
+  return(y)
 }
 
 randomPixels <- function(x, pixel_budget) {

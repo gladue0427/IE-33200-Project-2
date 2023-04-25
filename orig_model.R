@@ -25,30 +25,18 @@ f_grass <- list.files("data-for-332/grass")
 
 
 ############################## TEST CODE ############################
-
 test_image <- image_load(paste("data-for-332/grass/",f_grass[1],sep=""),
                          target_size = target_size)
 
-
-############### Find "most green" pixels in image ####################
 y <- image_load(paste("data-for-332/grass/",f_grass[5],sep=""),
               target_size = target_size)
 y <- image_to_array(y)
 y <- y/255
-y_inv <- y
+
+
+############### Find "most green" pixels in image ####################
 pixel_budget <- 0.02
-greenNess <- y[,,2] - y[,,1] - y[,,3]
-cutoff <- quantile(greenNess, 1 - pixel_budget, type=1)
-most_green <- which(greenNess > cutoff, arr.ind=TRUE)
-for (i in 1:dim(most_green)[1]) {
-  pixel <- most_green[i,]
-  y_inv[pixel[1], pixel[2], 1] <- runif(1)
-  y_inv[pixel[1], pixel[2], 2] <- runif(1)
-  y_inv[pixel[1], pixel[2], 3] <- runif(1)
-  # y_inv[pixel[1], pixel[2], 1:2] <- runif(1, 0.78, 1)
-  # 
-  # y_inv[pixel[1], pixel[2], 3] <- 0
-}
+y_inv <- convert_mostGreen_to_yellow(y, pixel_budget = pixel_budget)
 
 y_test <- array_reshape(y_inv, c(1, dim(y_inv)))
 model %>% predict(y_test)
