@@ -1,0 +1,18 @@
+requirements to run:
+- download model.zip/model.tar and data-for-332.tar.gz from Brightspace
+- unzip/extract folders
+- move "dandelion_model" from the "model" folder to the root project folder (IE-33200-Project-2)
+- move "grass" and "dandelions" from "data-for-332" to the root project folder
+- do not rename files, it will probably mess stuff up
+
+- download Python (I used anaconda3)
+- In the Rstudio menu bar, go to Tools -> Global Options -> Python and select Python interpreter
+          - your downloaded version should show up automatically
+- install packages tidyverse, keras, tensorflow, and reticulate
+- run library() commands at top of orig_model.R
+- run install_tensorflow() line in orig_model.R
+    - do this separately from any other install steps because it may take a while
+- run install_keras() line
+
+- make sure your working directory is the root project folder
+- run model <- load_model_tf() line
