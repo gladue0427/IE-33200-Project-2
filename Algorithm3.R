@@ -1,48 +1,27 @@
-# Method: Fast Gradient Sign Method
-# Contains support vector machine classifer
-# Load required libraries
-library(e1071)
-library(adversarials)
-library(imager)
-
-# Load pre-trained classifier
-classifier <- readRDS("svm_classifier.rds")
-
-# Load example image
-image <- load.image("example_image.png")
-
-# Convert image to matrix and normalize pixel values
-image_matrix <- as.matrix(image)
-image_matrix <- (image_matrix - mean(image_matrix)) / sd(image_matrix)
-
-# Define adversarial function using FGSM attack
-fgsm_attack <- function(image, epsilon) {
-  # Calculate gradient of loss with respect to input image
-  gradient <- gradient(model = classifier, x = image, loss_function = "hinge_loss")
- 
-  # Add perturbation to image based on gradient
-  perturbed_image <- image + epsilon * sign(gradient)
- 
-  # Clip pixel values to range [0, 1]
-  perturbed_image <- pmax(0, pmin(perturbed_image, 1))
- 
-  return(perturbed_image)
+# changes random pixels in image
+randomPixels <- function(x, pixel_budget = 0.01) {
+  
+  # initialize matrix where the indices of the pixels to be changed will be stored
+  # # of rows = number of pixels to be changed
+  # first element of row is the row index of the pixel to be changed
+  # second element is the column index
+  numRows <- dim(x)[1]
+  numCols <- dim(x)[2]
+  change_pixels <- matrix(0, nrow=numRows * numCols * pixel_budget, ncol = 2)
+  
+  # fills matrix with random values corresponding to 
+  # the number of rows or columns as appropriate
+  change_pixels[,1] <- round(runif(dim(change_pixels)[1], min=1, max=numRows), 0)
+  change_pixels[,2] <- round(runif(dim(change_pixels)[1], min=1, max=numCols), 0)
+  
+  # return(change_pixels)
+  for (i in 1:dim(change_pixels)[1]) {
+    pixel <- change_pixels[i,]
+    
+    ############### Make pixel a random color #########
+    x[pixel[1], pixel[2], 1] <- runif(1)
+    x[pixel[1], pixel[2], 2] <- runif(1)
+    x[pixel[1], pixel[2], 3] <- runif(1)
+  }
+  return(x)
 }
-
-# Define function to evaluate accuracy of classifier on adversarial examples
-evaluate_adversarial_accuracy <- function(classifier, image, epsilon) {
-  # Generate adversarial example using FGSM attack
-  adversarial_image <- fgsm_attack(image, epsilon)
- 
-  # Classify adversarial example and return predicted class
-  prediction <- predict(classifier, t(adversarial_image))
-  return(prediction)
-}
-
-# Evaluate accuracy of classifier on original image
-original_prediction <- predict(classifier, t(image_matrix))
-cat("Classifier prediction for original image:", original_prediction, "\n")
-
-# Evaluate accuracy of classifier on adversarial example with epsilon = 0.1
-adversarial_prediction <- evaluate_adversarial_accuracy(classifier, image_matrix, 0.1)
-cat("Classifier prediction for adversarial image with epsilon = 0.1:", adversarial_prediction, "\n")

@@ -1,35 +1,31 @@
-# Method: Decision Trees
-# Load required packages
-library(mlr)
-library(randomForest)
-library(parallelMap)
-
-# Set up parallel processing
-parallelStartMulticore(4)
-
-# Load training data
-data = read.csv("train.csv")
-
-# Define task
-task = makeClassifTask(data = data, target = "label")
-
-# Define learner
-learner = makeLearner("classif.randomForest")
-
-# Train model
-model = train(learner, task)
-
-# Load image data to classify
-image = readJPEG("image.jpg")
-
-# Convert image to data frame
-image_df = data.frame(t(matrix(as.vector(image), ncol = 3)))
-
-# Predict class of image
-prediction = predict(model, newdata = image_df)
-
-# Convert prediction to character
-prediction = as.character(prediction)
-
-# Save predicted class to file
-writeLines(prediction, "predicted_class.txt")
+# converts most yellow pixels to the average color of the image
+convert_mostYellow <- function(y, pixel_budget=0.01) {
+  mean_R <- mean(y[,,1])
+  mean_G <- mean(y[,,2])
+  mean_B <- mean(y[,,3])
+  # calculate "yellowness" of pictures
+  yellowNess <- y[,,1] + y[,,2] - y[,,3]
+  
+  # store the indices of percentage of pixels indicated by the pixel budget that
+  # are the most yellow
+  cutoff <- quantile(yellowNess, 1 - pixel_budget, type=1)
+  most_yellow <- which(yellowNess > cutoff, arr.ind=TRUE)
+  
+  #return(most_yellow)
+  
+  # change the color of the most yellow pixels
+  for (i in 1:dim(most_yellow)[1]) {
+    pixel <- most_yellow[i,]
+    
+    ################ Make Pixel Green-ish #############
+    # y[pixel[1], pixel[2], 1] <- runif(1, 0, 0.1)
+    # y[pixel[1], pixel[2], 2] <- runif(1, 0.3, 0.8)
+    
+    
+    ########Make Pixel Average Color of Image #######
+    y[pixel[1], pixel[2], 1] <- mean_R
+    y[pixel[1], pixel[2], 2] <- mean_G
+    y[pixel[1], pixel[2], 3] <- mean_B
+  }
+  return(y)
+}

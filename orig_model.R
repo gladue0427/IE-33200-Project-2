@@ -50,10 +50,6 @@ source("algos.R")
 ############### Find "most green" pixels in image ####################
 pixel_budget <- 0.01
 
-#y_inv <- convert_mostGreen(y, pixel_budget = pixel_budget)
-
-#y_inv <- convert_mostYellow(y, pixel_budget = pixel_budget)
-y_inv <- y
 y_inv <- mod_image(y, 0.1)
 # y_inv <- change_least_average(y)
 plot(1:dim(y)[1], 1:dim(y)[2], type = "n", xlab = "", ylab = "", axes = FALSE)
