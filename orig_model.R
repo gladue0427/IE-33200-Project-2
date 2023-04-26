@@ -23,8 +23,6 @@ rgb <- 3 #color channels
 f_grass <- list.files("grass")
 f_dande <- list.files("dandelions")
 
-
-
 ############################## TEST CODE ############################
 test_image <- image_load("grass",
                          target_size = target_size)
@@ -104,17 +102,22 @@ for (i in f_grass){
 }
 
 res=c("","")
+num_fooled = 0
 for (i in f_dande){
   test_image <- image_load(paste("dandelions/",i,sep=""),
                            target_size = target_size)
   x <- image_to_array(test_image)
   x <- x/255
-  x <- convert_mostYellow(x, pixel_budget = )
-  x <- array_reshape(x, c(1, dim(x)))
-  pred <- model %>% predict(x)
+  x <- convert_mostYellow(x, 0.01)
+  x_test <- array_reshape(x, c(1, dim(x)))
+  pred <- model %>% predict(x_test)
   print(pred)
   if(pred[1,1]<0.50){
-    print(i)
+    # print(i)
+    plot(1:224, 1:224, type = "n")
+    rasterImage(as.raster(x), 1, 1, 224, 224)
+    num_fooled = num_fooled + 1
   }
 }
+print(num_fooled)
 print(res)
