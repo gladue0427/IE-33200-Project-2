@@ -4,7 +4,7 @@ library(tensorflow)
 library(reticulate)
 library(here)
 
-setwd(here())
+setwd("~/GitHub/IE-33200-Project-2")
 
 ## RUN SEPARATELY ##
 install_tensorflow(extra_packages="pillow")
@@ -28,15 +28,15 @@ f_grass <- list.files("data-for-332/grass")
 test_image <- image_load(paste("data-for-332/grass/",f_grass[1],sep=""),
                          target_size = target_size)
 
-y <- image_load(paste("data-for-332/grass/",f_grass[5],sep=""),
+y <- image_load(paste("data-for-332/grass/",f_grass[1],sep=""),
               target_size = target_size)
 y <- image_to_array(y)
 y <- y/255
 
-
+source("algos.R")
 ############### Find "most green" pixels in image ####################
-pixel_budget <- 0.02
-y_inv <- convert_mostGreen_to_yellow(y, pixel_budget = pixel_budget)
+pixel_budget <- 0.95
+y_inv <- convert_mostGreen(y, pixel_budget = pixel_budget)
 
 y_test <- array_reshape(y_inv, c(1, dim(y_inv)))
 model %>% predict(y_test)

@@ -5,19 +5,19 @@ reduceUpperExtremities <- function(x, pixel_budget) {
   return(ext_removed)
 }
 
-convert_mostGreen_to_yellow <- function(x, pixel_budget=0.01) {
+convert_mostGreen <- function(x, pixel_budget=0.01) {
   y <- x
   greenNess <- y[,,2] - y[,,1] - y[,,3]
   cutoff <- quantile(greenNess, 1 - pixel_budget, type=1)
   most_green <- which(greenNess > cutoff, arr.ind=TRUE)
   for (i in 1:dim(most_green)[1]) {
     pixel <- most_green[i,]
-    # y[pixel[1], pixel[2], 1] <- runif(1)
-    # y[pixel[1], pixel[2], 2] <- runif(1)
-    # y[pixel[1], pixel[2], 3] <- runif(1)
-    y[pixel[1], pixel[2], 1:2] <- runif(1, 0.78, 1)
-    
-    y[pixel[1], pixel[2], 3] <- 0
+    y[pixel[1], pixel[2], 1] <- runif(1)
+    y[pixel[1], pixel[2], 2] <- runif(1)
+    y[pixel[1], pixel[2], 3] <- runif(1)
+    # y[pixel[1], pixel[2], 1:2] <- runif(1, 0.78, 1)
+    # 
+    # y[pixel[1], pixel[2], 3] <- 0
   }
   return(y)
 }
