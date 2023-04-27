@@ -20,7 +20,7 @@ source("Algorithm4.R")
 source("Algorithm5.R")
 
 # run separately - may take a long time
-model <- load_model_tf("dandelion_model")
+model = load_model_tf("dandelion_model")
 
 res=c("","")
 width <- 224
@@ -39,6 +39,7 @@ grass_image_index <- 1
 orig_grass_name <-paste("grass/",f_grass[grass_image_index],sep="")
 orig_grass <- image_load(orig_grass_name, target_size = target_size)
 orig_grass <- image_to_array(orig_grass)
+total_pixels <- dim(orig_grass)[1] * dim(orig_grass)[2]
 orig_grass <- orig_grass/255
 
 # plot original image
@@ -46,8 +47,8 @@ plot(1:dim(orig_grass)[1], 1:dim(orig_grass)[2], main=paste("Grass Image Index: 
 rasterImage(as.raster(orig_grass), 1, 1, dim(orig_grass)[1], dim(orig_grass)[2])
 
 # modify image 
-pixel_budget <- 0.05 #percentage of pixels to change
-mod_grass <- mod_image(orig_grass, pixel_budget=pixel_budget)
+pixel_budget <- 0.01 * total_pixels #percentage of pixels to change
+mod_grass <- mod_image(orig_grass, pixel_budget=pixel_budget, type=1)
 
 # plot modified image
 plot(1:dim(mod_grass)[1], 1:dim(mod_grass)[2], main=paste("Image Index: ", grass_image_index, "\nModified with Pixel Budget = ", pixel_budget),type = "n", xlab = "", ylab = "", axes = FALSE)
@@ -72,8 +73,8 @@ plot(1:dim(orig_dan)[1], 1:dim(orig_dan)[2], main=paste("Dandelion Image Index: 
 rasterImage(as.raster(orig_dan), 1, 1, dim(orig_dan)[1], dim(orig_dan)[2])
 
 # modify image
-pixel_budget <- 0.05
-mod_dan <- mod_image(orig_dan, pixel_budget=pixel_budget)
+pixel_budget <- 0.01
+mod_dan <- mod_image(orig_dan, pixel_budget=pixel_budget, type=0)
 
 # plot modified image
 plot(1:dim(mod_dan)[1], 1:dim(mod_dan)[2], main=paste("Dandelion Image Index: ", dan_image_index,"\nModified with Pixel Budget = ", pixel_budget),type = "n", xlab = "", ylab = "", axes = FALSE)
@@ -94,12 +95,12 @@ for (i in f_grass){
                            target_size = target_size)
   x <- image_to_array(test_image)
   x <- x/255
-  x <- mod_image(x, pixel_budget = pixel_budget)
+  x <- mod_image(x, pixel_budget = pixel_budget, type=1)
   x <- array_reshape(x, c(1, dim(x)))
   pred <- model %>% predict(x)
   if(pred[1,2]<0.50){
     num_fooled <- num_fooled + 1
-    #print(i)
+    print(i)
   }
 }
 print(num_fooled)
@@ -108,21 +109,20 @@ print(num_fooled)
 # dandelion images
 res=c("","")
 num_fooled <- 0
-pixel_budget <- 0.05
+pixel_budget <- 0.01
 for (i in f_dande){
   test_image <- image_load(paste("dandelions/",i,sep=""),
                            target_size = target_size)
   x <- image_to_array(test_image)
   x <- x/255
-  #x <- convert_mostGreen(x)
-  x <- mod_image(x, pixel_budget = pixel_budget)
+  x <- mod_image(x, pixel_budget = pixel_budget, type=0)
   x_test <- array_reshape(x, c(1, dim(x)))
   pred <- model %>% predict(x_test)
   print(pred)
   if(pred[1,1]<0.50){
-    # print(i)
-    # plot(1:224, 1:224, type = "n")
-    # rasterImage(as.raster(x), 1, 1, 224, 224)
+    print(i)
+    plot(1:224, 1:224, type = "n")
+    rasterImage(as.raster(x), 1, 1, 224, 224)
     num_fooled <- num_fooled + 1
   }
 }

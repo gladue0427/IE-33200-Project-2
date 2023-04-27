@@ -1,13 +1,16 @@
 # changes random pixels in image
-randomPixels <- function(x, pixel_budget = 0.01) {
+randomPixels <- function(y, pixel_budget = 500) {
+  if (pixel_budget < 1) {
+    return(y)
+  }
   
   # initialize matrix where the indices of the pixels to be changed will be stored
   # # of rows = number of pixels to be changed
   # first element of row is the row index of the pixel to be changed
   # second element is the column index
-  numRows <- dim(x)[1]
-  numCols <- dim(x)[2]
-  change_pixels <- matrix(0, nrow=numRows * numCols * pixel_budget, ncol = 2)
+  numRows <- dim(y)[1]
+  numCols <- dim(y)[2]
+  change_pixels <- matrix(0, nrow=pixel_budget, ncol = 2)
   
   # fills matrix with random values corresponding to 
   # the number of rows or columns as appropriate
@@ -19,9 +22,9 @@ randomPixels <- function(x, pixel_budget = 0.01) {
     pixel <- change_pixels[i,]
     
     ############### Make pixel a random color #########
-    x[pixel[1], pixel[2], 1] <- runif(1)
-    x[pixel[1], pixel[2], 2] <- runif(1)
-    x[pixel[1], pixel[2], 3] <- runif(1)
+    y[pixel[1], pixel[2], 1] <- runif(1)
+    y[pixel[1], pixel[2], 2] <- runif(1)
+    y[pixel[1], pixel[2], 3] <- runif(1)
   }
-  return(x)
+  return(y)
 }

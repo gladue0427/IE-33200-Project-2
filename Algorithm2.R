@@ -1,5 +1,8 @@
 # converts most yellow pixels to the average color of the image
-convert_mostYellow <- function(y, pixel_budget=0.01) {
+convert_mostYellow <- function(y, pixel_budget=500) {
+  if (pixel_budget < 1) {
+    return(y)
+  }
   mean_R <- mean(y[,,1])
   mean_G <- mean(y[,,2])
   mean_B <- mean(y[,,3])
@@ -8,8 +11,8 @@ convert_mostYellow <- function(y, pixel_budget=0.01) {
   
   # store the indices of percentage of pixels indicated by the pixel budget that
   # are the most yellow
-  cutoff <- quantile(yellowNess, 1 - pixel_budget, type=1)
-  most_yellow <- which(yellowNess > cutoff, arr.ind=TRUE)
+  #cutoff <- quantile(yellowNess, 1 - pixel_budget, type=1)
+  most_yellow <- arrayInd(order(yellowNess, decreasing = TRUE)[1:pixel_budget], dim(yellowNess))#which(yellowNess > cutoff, arr.ind=TRUE)
   
   #return(most_yellow)
   

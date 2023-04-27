@@ -1,5 +1,7 @@
-change_most_average <- function(y, pixel_budget=0.01) {
-  
+change_most_average <- function(y, pixel_budget=500) {
+  if (pixel_budget < 1) {
+    return(y)
+  }
   # averages for each color value in image
   mean_R <- mean(y[,,1])
   mean_G <- mean(y[,,2])
@@ -9,8 +11,8 @@ change_most_average <- function(y, pixel_budget=0.01) {
   dist_from_avg <- abs(y[,,1] - mean_R) + abs(y[,,2] - mean_G) + abs(y[,,3] - mean_B)
   
   # finds indices of the most average pixels, limited to the pixel budget
-  cutoff <- quantile(dist_from_avg, pixel_budget, type=1)
-  most_avg <- which(dist_from_avg < cutoff, arr.ind = TRUE)
+  #cutoff <- quantile(dist_from_avg, pixel_budget, type=1)
+  most_avg <- arrayInd(order(dist_from_avg, decreasing = TRUE)[1:pixel_budget], dim(dist_from_avg))#which(dist_from_avg < cutoff, arr.ind = TRUE)
   
   # changes colors of the most average pixels
   for (i in 1:dim(most_avg)[1]) {
