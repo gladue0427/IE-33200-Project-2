@@ -20,7 +20,7 @@ source("Algorithm4.R")
 source("Algorithm5.R")
 
 # run separately - may take a long time
-model = load_model_tf("dandelion_model")
+model <- load_model_tf("dandelion_model")
 
 res=c("","")
 width <- 224
@@ -74,7 +74,7 @@ rasterImage(as.raster(orig_dan), 1, 1, dim(orig_dan)[1], dim(orig_dan)[2])
 
 # modify image
 pixel_budget <- 0.01
-mod_dan <- mod_image(orig_dan, pixel_budget=pixel_budget, type=0)
+mod_dan <- mod_image(orig_dan, pixel_budget=pixel_budget, type=1)
 
 # plot modified image
 plot(1:dim(mod_dan)[1], 1:dim(mod_dan)[2], main=paste("Dandelion Image Index: ", dan_image_index,"\nModified with Pixel Budget = ", pixel_budget),type = "n", xlab = "", ylab = "", axes = FALSE)
@@ -115,14 +115,14 @@ for (i in f_dande){
                            target_size = target_size)
   x <- image_to_array(test_image)
   x <- x/255
-  x <- mod_image(x, pixel_budget = pixel_budget, type=0)
+  x <- mod_image(x, pixel_budget = pixel_budget, type=1)
   x_test <- array_reshape(x, c(1, dim(x)))
   pred <- model %>% predict(x_test)
   print(pred)
   if(pred[1,1]<0.50){
-    print(i)
-    plot(1:224, 1:224, type = "n")
-    rasterImage(as.raster(x), 1, 1, 224, 224)
+    # print(i)
+    # plot(1:224, 1:224, type = "n")
+    # rasterImage(as.raster(x), 1, 1, 224, 224)
     num_fooled <- num_fooled + 1
   }
 }
