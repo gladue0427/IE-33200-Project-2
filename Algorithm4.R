@@ -1,3 +1,4 @@
+#finds most average pixels
 find_most_average <- function(y, pixel_budget=500) {
   # if the pixel budget was given as a percentage (< 1), then calculate the
   # number of pixels to be changed
@@ -15,18 +16,8 @@ find_most_average <- function(y, pixel_budget=500) {
   dist_from_avg <- abs(y[,,1] - mean_R) + abs(y[,,2] - mean_G) + abs(y[,,3] - mean_B)
   
   # finds indices of the most average pixels, limited to the pixel budget
-  #cutoff <- quantile(dist_from_avg, pixel_budget, type=1)
   most_avg <- arrayInd(order(dist_from_avg, decreasing = TRUE)[1:pixel_budget], dim(dist_from_avg))#which(dist_from_avg < cutoff, arr.ind = TRUE)
   
   return(most_avg)
-  # changes colors of the most average pixels
-  # for (i in 1:dim(most_avg)[1]) {
-  #   pixel <- most_avg[i,]
-  # 
-  #   ############### Make pixel a random color #########
-  #   y[pixel[1], pixel[2], 1] <- runif(1)
-  #   y[pixel[1], pixel[2], 2] <- runif(1)
-  #   y[pixel[1], pixel[2], 3] <- runif(1)
-  # }
-  # return(y)
+  
 }

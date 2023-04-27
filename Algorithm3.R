@@ -1,4 +1,4 @@
-# changes random pixels in image
+# find random pixels in image
 find_random_pixels <- function(y, pixel_budget = 500) {
   # if the pixel budget was given as a percentage (< 1), then calculate the
   # number of pixels to be changed
@@ -22,14 +22,4 @@ find_random_pixels <- function(y, pixel_budget = 500) {
   change_pixels[,2] <- round(runif(dim(change_pixels)[1], min=1, max=numCols), 0)
   
   return(change_pixels)
-  
-  # for (i in 1:dim(change_pixels)[1]) {
-  #   pixel <- change_pixels[i,]
-  #   
-  #   ############### Make pixel a random color #########
-  #   y[pixel[1], pixel[2], 1] <- runif(3)
-  #   y[pixel[1], pixel[2], 2] <- runif(1)
-  #   y[pixel[1], pixel[2], 3] <- runif(1)
-  # }
-  # return(y)
 }

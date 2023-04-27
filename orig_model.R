@@ -11,6 +11,7 @@ install_tensorflow(extra_packages="pillow")
 install_keras()
 
 ############ RUN ALL THESE LINES BEFORE USING MODEL ####################
+
 setwd("~/GitHub/IE-33200-Project-2")
 source("Main_Algorithm.R")
 source("Algorithm1.R")
@@ -47,7 +48,7 @@ plot(1:dim(orig_grass)[1], 1:dim(orig_grass)[2], main=paste("Grass Image Index: 
 rasterImage(as.raster(orig_grass), 1, 1, dim(orig_grass)[1], dim(orig_grass)[2])
 
 # modify image 
-pixel_budget <- 0.01 * total_pixels #percentage of pixels to change
+pixel_budget <- 0.01 #percentage of pixels to change
 mod_grass <- mod_image(orig_grass, pixel_budget=pixel_budget, type=1)
 
 # plot modified image
@@ -73,7 +74,7 @@ plot(1:dim(orig_dan)[1], 1:dim(orig_dan)[2], main=paste("Dandelion Image Index: 
 rasterImage(as.raster(orig_dan), 1, 1, dim(orig_dan)[1], dim(orig_dan)[2])
 
 # modify image
-pixel_budget <- 0.01
+pixel_budget <- "a;lksdjflkas"
 mod_dan <- mod_image(orig_dan, pixel_budget=pixel_budget, type=1)
 
 # plot modified image
