@@ -63,7 +63,7 @@ print(prediction)
 ############################## SINGLE DANDELION IMAGE ############################
 
 # upload original image - change image index to use new picture
-dan_image_index <- 1
+dan_image_index <- 24
 orig_dan_name <-paste("dandelions/",f_dande[dan_image_index],sep="")
 orig_dan <- image_load(orig_dan_name, target_size = target_size)
 orig_dan <- image_to_array(orig_dan)
@@ -74,7 +74,7 @@ plot(1:dim(orig_dan)[1], xlim=c(1,dim(orig_dan)[1]), ylim=c(1,dim(orig_dan)[2]),
 rasterImage(as.raster(orig_dan), 1, 1, dim(orig_dan)[1], dim(orig_dan)[2])
 
 # modify image
-pixel_budget <- 0.01
+pixel_budget <- 3
 mod_dan <- mod_image(orig_dan, pixel_budget=pixel_budget, type=1)
 
 # plot modified image
@@ -110,7 +110,7 @@ print(num_fooled)
 # dandelion images
 res=c("","")
 num_fooled <- 0
-pixel_budget <- 300
+pixel_budget <- 3
 for (i in f_dande){
   test_image <- image_load(paste("dandelions/",i,sep=""), target_size = target_size)
   x <- image_to_array(test_image)
@@ -147,8 +147,8 @@ for (i in 1:length(f_dande)){
 # It helps to restart R before running it
 P <- 224 * 224
 b <- round(P/100)
-test_start <- 400
-test_end <- b
+test_start <- 1
+test_end <- 99
 #scores <- c()
 total_score <- 0
 for (i in test_start:test_end) {
