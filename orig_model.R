@@ -76,7 +76,27 @@ rasterImage(as.raster(orig_dan), 1, 1, dim(orig_dan)[1], dim(orig_dan)[2])
 
 # modify image
 pixel_budget <- 0.01
+# start_time <- Sys.time()
 mod_dan <- mod_image(orig_dan, pixel_budget=pixel_budget, type=1)
+# end_time <- Sys.time()
+# print(end_time - start_time)
+
+# wall times calculation
+# total_time <- 0
+# wall_times <- c()
+# for(i in seq(from = 0.01, to=0.99, by=0.01)) {
+#   pixel_budget <- i
+#   start_time <- Sys.time()
+#   mod_dan <- mod_image(orig_dan, pixel_budget=pixel_budget, type=1)
+#   end_time <- Sys.time()
+#   if (end_time - start_time - total_time > 0.1) {
+#     print(i)
+#   }
+#   total_time <- end_time - start_time
+#   wall_times <- c(wall_times, total_time)
+# }
+# plot(seq(from = 0.01, to=0.99, by=0.01), wall_times * 1000, main="Wall Times at Different Pixel Budgets", xlab="Pixel Budget as Percentage of P", ylab="Wall Times (ms)")
+
 
 # plot modified image
 plot(1:dim(mod_dan)[1], xlim=c(1,dim(mod_dan)[1]), ylim=c(1,dim(mod_dan)[2]), main=paste("Dandelion Image Index: ", dan_image_index,"\nModified with Pixel Budget = ", pixel_budget),type = "n", xlab = "", ylab = "", axes = FALSE)
@@ -134,7 +154,6 @@ for (i in f_dande){
 }
 print(num_fooled)
 print(res)
-
 
 ##################### PERFORMANCE SCORE ##############################
 
