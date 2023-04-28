@@ -110,10 +110,12 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
     
     # assigns weights to each algorithm's results
     weights <- c(0.05, 0.35, 0.3, 0.2, 0.1)
-    # calculates the nu
+    
+    # calculates the number of pixels to modify from the set of pixels
+    # each algoirthm votes to change
     weighted_num_pixels <- floor(weights * pixel_budget)
     
-    
+    # changes most green pixels
     for (i in sample(1:dim(most_green)[1], weighted_num_pixels[1])) {
       pixel <- most_green[i,]
       
@@ -124,6 +126,7 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
     
     }
     
+    # changes most yellow pixels
     for (i in sample(1:dim(most_yellow)[1], weighted_num_pixels[2])) {
       pixel <- most_yellow[i,]
       
@@ -137,6 +140,7 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
       y[pixel[1], pixel[2], 3] <- mean_B
     }
     
+    # changes random pixels
     for (i in sample(1:dim(random_pixels)[1], weighted_num_pixels[3])) {
       pixel <- random_pixels[i,]
       
@@ -146,6 +150,7 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
       y[pixel[1], pixel[2], 3] <- runif(1)
     }
     
+    # changes most average pixels
     for (i in sample(1:dim(most_avg)[1], weighted_num_pixels[4])) {
       pixel <- most_avg[i,]
       
@@ -155,6 +160,7 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
       y[pixel[1], pixel[2], 3] <- runif(1)
     }
     
+    # changes least average pixels
     for (i in sample(1:dim(least_avg)[1], weighted_num_pixels[5])) {
       pixel <- least_avg[i,]
       
