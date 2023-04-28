@@ -130,10 +130,10 @@ print(num_fooled)
 print(res)
 
 
-# dandelion images 
-dandelion_images <- array(0, dim = c(length(f_dande), 224, 224, 3))
+##################### PERFORMANCE SCORE ##############################
 
 # store all dandelion images in an array
+dandelion_images <- array(0, dim = c(length(f_dande), 224, 224, 3))
 for (i in 1:length(f_dande)){
   test_image <- image_load(paste("dandelions/",f_dande[i],sep=""),
                            target_size = target_size)
@@ -142,24 +142,24 @@ for (i in 1:length(f_dande)){
   dandelion_images[i,,,] <- x
 }
 
-
-########### Caution: This section will take >1.5 hours to run on a fast computer (ryzen 7 5800x)
-# Calculate algorithm performance score
+# Calculate algorithm performance score for dandelion images
+# This section could take a long time to run
+# It helps to restart R before running it
 P <- 224 * 224
 b <- round(P/100)
-test_start <- 300
-test_end <- 400
+test_start <- 400
+test_end <- b
 #scores <- c()
 total_score <- 0
 for (i in test_start:test_end) {
   num_fooled <- 0
   for (j in 1:dim(dandelion_images)[1]) {
-  x <- mod_image(dandelion_images[j,,,], pixel_budget = pixel_budget, type=1)
+  x <- mod_image(dandelion_images[j,,,], pixel_budget = i, type=1)
   x_test <- array_reshape(x, c(1, dim(x)))
   pred <- model %>% predict(x_test)
   #print(pred)
     if(pred[1,1]<0.50){
-      print(j)
+      #print(j)
       num_fooled <- num_fooled + 1
     }
   }
