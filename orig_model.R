@@ -70,15 +70,15 @@ orig_dan <- image_to_array(orig_dan)
 orig_dan <- orig_dan/255
 
 # plot original image
-plot(1:dim(orig_dan)[1], 1:dim(orig_dan)[2], main=paste("Dandelion Image Index: ", dan_image_index,"\nOriginal Image"),type = "n", xlab = "", ylab = "", axes = FALSE)
+plot(1:dim(orig_dan)[1], xlim=c(1,dim(orig_dan)[1]), ylim=c(1,dim(orig_dan)[2]), main=paste("Dandelion Image Index: ", dan_image_index,"\nOriginal Image"),type = "n", xlab = "", ylab = "", axes = FALSE)
 rasterImage(as.raster(orig_dan), 1, 1, dim(orig_dan)[1], dim(orig_dan)[2])
 
 # modify image
-pixel_budget <- "a;lksdjflkas"
+pixel_budget <- 0.01
 mod_dan <- mod_image(orig_dan, pixel_budget=pixel_budget, type=1)
 
 # plot modified image
-plot(1:dim(mod_dan)[1], 1:dim(mod_dan)[2], main=paste("Dandelion Image Index: ", dan_image_index,"\nModified with Pixel Budget = ", pixel_budget),type = "n", xlab = "", ylab = "", axes = FALSE)
+plot(1:dim(mod_dan)[1], xlim=c(1,dim(mod_dan)[1]), ylim=c(1,dim(mod_dan)[2]), main=paste("Dandelion Image Index: ", dan_image_index,"\nModified with Pixel Budget = ", pixel_budget),type = "n", xlab = "", ylab = "", axes = FALSE)
 rasterImage(as.raster(mod_dan), 1, 1, dim(mod_dan)[1], dim(mod_dan)[2])
 
 # make prediction using model
@@ -86,7 +86,7 @@ mod_dan_pred <- array_reshape(mod_dan, c(1, dim(mod_dan)))
 prediction <- model %>% predict(mod_dan_pred)
 print(prediction)
 
-####################### FINDING NUMBER OF IMAGES FOOLED ###############################
+####################### FINDING IMAGES FOOLED FOR A SPECIFIC PIXEL BUDGET###############################
 
 # grass images
 num_fooled <- 0
@@ -110,18 +110,17 @@ print(num_fooled)
 # dandelion images
 res=c("","")
 num_fooled <- 0
-pixel_budget <- 0.01
+pixel_budget <- 300
 for (i in f_dande){
-  test_image <- image_load(paste("dandelions/",i,sep=""),
-                           target_size = target_size)
+  test_image <- image_load(paste("dandelions/",i,sep=""), target_size = target_size)
   x <- image_to_array(test_image)
   x <- x/255
   x <- mod_image(x, pixel_budget = pixel_budget, type=1)
   x_test <- array_reshape(x, c(1, dim(x)))
   pred <- model %>% predict(x_test)
-  print(pred)
+  #print(pred)
   if(pred[1,1]<0.50){
-    # print(i)
+    print(i)
     # plot(1:224, 1:224, type = "n")
     # rasterImage(as.raster(x), 1, 1, 224, 224)
     num_fooled <- num_fooled + 1
@@ -131,6 +130,48 @@ print(num_fooled)
 print(res)
 
 
+# dandelion images 
+dandelion_images <- array(0, dim = c(length(f_dande), 224, 224, 3))
+
+# store all dandelion images in an array
+for (i in 1:length(f_dande)){
+  test_image <- image_load(paste("dandelions/",f_dande[i],sep=""),
+                           target_size = target_size)
+  x <- image_to_array(test_image)
+  x <- x/255
+  dandelion_images[i,,,] <- x
+}
+
+
+########### Caution: This section will take >1.5 hours to run on a fast computer (ryzen 7 5800x)
+# Calculate algorithm performance score
+P <- 224 * 224
+b <- round(P/100)
+test_start <- 300
+test_end <- 400
+#scores <- c()
+total_score <- 0
+for (i in test_start:test_end) {
+  num_fooled <- 0
+  for (j in 1:dim(dandelion_images)[1]) {
+  x <- mod_image(dandelion_images[j,,,], pixel_budget = pixel_budget, type=1)
+  x_test <- array_reshape(x, c(1, dim(x)))
+  pred <- model %>% predict(x_test)
+  #print(pred)
+    if(pred[1,1]<0.50){
+      print(j)
+      num_fooled <- num_fooled + 1
+    }
+  }
+  score <-  num_fooled * P/i
+  #scores <- c(scores, score)
+  
+  total_score <- total_score + score
+  print(paste("Pixel Budget: ", i, ", Cumulative Score: ", round(total_score, 3)))
+}
+
+algorithm_score <- sum(scores)
+print(algorithm_score)
 
 ##################### fgsm attempt #############################
 
