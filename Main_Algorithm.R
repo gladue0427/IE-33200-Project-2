@@ -49,11 +49,11 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
   # if original image is grass
   if (type == 0) {
     # weights for different algorithms
-    weights <- c(0.1, 0.4, 0.1, 0.2, 0.2)
+    weights <- c(0.4, 0.2, 0.1, 0.2, 0.1)
     # number of pixels each algorithm will be changing
     weighted_num_pixels <- floor(weights * pixel_budget)
     
-    # 
+    # changes most green pixels
     for (i in sample(1:dim(most_green)[1], weighted_num_pixels[1])) {
       pixel <- most_green[i,]
       
@@ -63,63 +63,54 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
       y[pixel[1], pixel[2], 3] <- runif(1, min=0.01, max=0.2)
       
     }
-    
+     
+    # changes most yellow pixels
     for (i in sample(1:dim(most_yellow)[1], weighted_num_pixels[2])) {
       pixel <- most_yellow[i,]
       
-      ################ Make Pixel Green-ish #############
-      # y[pixel[1], pixel[2], 1] <- runif(1, 0, 0.1)
-      # y[pixel[1], pixel[2], 2] <- runif(1, 0.3, 0.8)
-      
-      
-      ########Make Pixel Average Color of Image #######
-      y[pixel[1], pixel[2], 1] <- mean_R
-      y[pixel[1], pixel[2], 2] <- mean_G
-      y[pixel[1], pixel[2], 3] <- mean_B
+      # make pixel a shade of yellow in the realistic range of a dandelion
+      y[pixel[1], pixel[2], 1] <- runif(1, min=0.78, max=0.95)
+      y[pixel[1], pixel[2], 2] <- runif(1, min=0.78, max=0.95)
+      y[pixel[1], pixel[2], 3] <- runif(1, min=0.01, max=0.2)
     }
-    #y <- change_most_average(y, pixel_budget = floor(pixel_budget/10) * 2)
-    #y <- change_least_average(y, pixel_budget = floor(pixel_budget/10) * 2)
     
-    
-    #y <- convert_mostGreen(y, pixel_budget = floor(pixel_budget/10) * 2)
-    #y <- convert_mostYellow(y, pixel_budget = floor(pixel_budget/10) * 2)
-    #y <- randomPixels(y, pixel_budget = floor(pixel_budget/10) * 2)
+    # changes random pixels
     for (i in sample(1:dim(random_pixels)[1], weighted_num_pixels[3])) {
       pixel <- random_pixels[i,]
       
-      ############### Make pixel a random color #########
-      y[pixel[1], pixel[2], 1] <- runif(1)
-      y[pixel[1], pixel[2], 2] <- runif(1)
-      y[pixel[1], pixel[2], 3] <- runif(1)
+      # make pixel a shade of yellow in the realistic range of a dandelion
+      y[pixel[1], pixel[2], 1] <- runif(1, min=0.78, max=0.95)
+      y[pixel[1], pixel[2], 2] <- runif(1, min=0.78, max=0.95)
+      y[pixel[1], pixel[2], 3] <- runif(1, min=0.01, max=0.2)
     }
+    
+    # changes most average pixels
     for (i in sample(1:dim(most_avg)[1], weighted_num_pixels[4])) {
       pixel <- most_avg[i,]
       
-      ############### Make pixel a random color #########
-      y[pixel[1], pixel[2], 1] <- runif(1)
-      y[pixel[1], pixel[2], 2] <- runif(1)
-      y[pixel[1], pixel[2], 3] <- runif(1)
+      # make pixel a shade of yellow in the realistic range of a dandelion
+      y[pixel[1], pixel[2], 1] <- runif(1, min=0.78, max=0.95)
+      y[pixel[1], pixel[2], 2] <- runif(1, min=0.78, max=0.95)
+      y[pixel[1], pixel[2], 3] <- runif(1, min=0.01, max=0.2)
     }
     
+    # changes least average pixels
     for (i in sample(1:dim(least_avg)[1], weighted_num_pixels[5])) {
       pixel <- least_avg[i,]
       
-      ############### Make pixel a random color #########
-      # y[pixel[1], pixel[2], 1] <- runif(1)
-      # y[pixel[1], pixel[2], 2] <- runif(1)
-      # y[pixel[1], pixel[2], 3] <- runif(1)
-      
-      ########Make Pixel Average Color of Image #######
-      y[pixel[1], pixel[2], 1] <- mean_R
-      y[pixel[1], pixel[2], 2] <- mean_G
-      y[pixel[1], pixel[2], 3] <- mean_B
+      # make pixel a shade of yellow in the realistic range of a dandelion
+      y[pixel[1], pixel[2], 1] <- runif(1, min=0.78, max=0.95)
+      y[pixel[1], pixel[2], 2] <- runif(1, min=0.78, max=0.95)
+      y[pixel[1], pixel[2], 3] <- runif(1, min=0.01, max=0.2)
     }
   }
   
   # if original image is dandelion
   else if (type == 1) {
-    #weights <- c(0.2, 0.2, 0.2, 0.2, 0.2)
+    
+    # assigns weights to each algorithm's results
     weights <- c(0.05, 0.35, 0.3, 0.2, 0.1)
+    # calculates the nu
     weighted_num_pixels <- floor(weights * pixel_budget)
     
     

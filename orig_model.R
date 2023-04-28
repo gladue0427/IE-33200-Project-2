@@ -36,7 +36,7 @@ f_dande <- list.files("dandelions")
 ############################## SINGLE GRASS IMAGE ############################
 
 # upload original image - change image index to use new picture
-grass_image_index <- 1
+grass_image_index <- 41
 orig_grass_name <-paste("grass/",f_grass[grass_image_index],sep="")
 orig_grass <- image_load(orig_grass_name, target_size = target_size)
 orig_grass <- image_to_array(orig_grass)
@@ -49,11 +49,12 @@ rasterImage(as.raster(orig_grass), 1, 1, dim(orig_grass)[1], dim(orig_grass)[2])
 
 # modify image 
 pixel_budget <- 0.01 #percentage of pixels to change
-mod_grass <- mod_image(orig_grass, pixel_budget=pixel_budget, type=1)
+mod_grass <- mod_image(orig_grass, pixel_budget=pixel_budget, type=0)
 
 # plot modified image
 plot(1:dim(mod_grass)[1], 1:dim(mod_grass)[2], main=paste("Image Index: ", grass_image_index, "\nModified with Pixel Budget = ", pixel_budget),type = "n", xlab = "", ylab = "", axes = FALSE)
 rasterImage(as.raster(mod_grass), 1, 1, dim(mod_grass)[1], dim(mod_grass)[2])
+#legend("bottomright", legend=c("Algorithm 1", "Algorithm 2","Algorithm 3","Algorithm 4","Algorithm 5"), lwd=2, col=c(rgb(1,1,0), rgb(1,0,0), rgb(0,0,1), rgb(1,0,1), rgb(0,1,1)))
 
 # make prediction using model
 mod_grass_pred <- array_reshape(mod_grass, c(1, dim(mod_grass)))
@@ -91,19 +92,23 @@ print(prediction)
 
 # grass images
 num_fooled <- 0
-pixel_budget <- 0.05
+pixel_budget <- 0.01
+image_no <- 1
 for (i in f_grass){
   test_image <- image_load(paste("grass/",i,sep=""),
                            target_size = target_size)
   x <- image_to_array(test_image)
   x <- x/255
-  x <- mod_image(x, pixel_budget = pixel_budget, type=1)
+  x <- mod_image(x, pixel_budget = pixel_budget, type=0)
   x <- array_reshape(x, c(1, dim(x)))
   pred <- model %>% predict(x)
+  print(pred)
   if(pred[1,2]<0.50){
     num_fooled <- num_fooled + 1
     print(i)
   }
+  print(image_no)
+  image_no <- image_no + 1
 }
 print(num_fooled)
 
