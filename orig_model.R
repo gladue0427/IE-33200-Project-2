@@ -147,8 +147,8 @@ for (i in 1:length(f_dande)){
 # It helps to restart R before running it
 P <- 224 * 224
 b <- round(P/100)
-test_start <- 1
-test_end <- 99
+test_start <- 100
+test_end <- 199
 #scores <- c()
 total_score <- 0
 for (i in test_start:test_end) {
