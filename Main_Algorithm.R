@@ -130,7 +130,7 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
       y[pixel[1], pixel[2], 1] <- runif(1)
       y[pixel[1], pixel[2], 2] <- runif(1)
       y[pixel[1], pixel[2], 3] <- runif(1)
-      
+    
     }
     
     for (i in sample(1:dim(most_yellow)[1], weighted_num_pixels[2])) {
@@ -140,7 +140,7 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
       # y[pixel[1], pixel[2], 1] <- runif(1, 0, 0.1)
       # y[pixel[1], pixel[2], 2] <- runif(1, 0.3, 0.8)
       
-      ########Make Pixel Average Color of Image #######
+      #######Make Pixel Average Color of Image #######
       y[pixel[1], pixel[2], 1] <- mean_R
       y[pixel[1], pixel[2], 2] <- mean_G
       y[pixel[1], pixel[2], 3] <- mean_B
@@ -149,7 +149,7 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
     for (i in sample(1:dim(random_pixels)[1], weighted_num_pixels[3])) {
       pixel <- random_pixels[i,]
       
-      ############### Make pixel a random color #########
+      ############## Make pixel a random color #########
       y[pixel[1], pixel[2], 1] <- runif(1)
       y[pixel[1], pixel[2], 2] <- runif(1)
       y[pixel[1], pixel[2], 3] <- runif(1)
@@ -158,7 +158,7 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
     for (i in sample(1:dim(most_avg)[1], weighted_num_pixels[4])) {
       pixel <- most_avg[i,]
       
-      ############### Make pixel a random color #########
+      ############## Make pixel a random color #########
       y[pixel[1], pixel[2], 1] <- runif(1)
       y[pixel[1], pixel[2], 2] <- runif(1)
       y[pixel[1], pixel[2], 3] <- runif(1)
@@ -171,6 +171,7 @@ mod_image <- function(y, pixel_budget = 0.01, type = 0) {
       y[pixel[1], pixel[2], 1] <- mean_R
       y[pixel[1], pixel[2], 2] <- mean_G
       y[pixel[1], pixel[2], 3] <- mean_B
+      
     }
   }
   return(y)

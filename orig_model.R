@@ -63,7 +63,7 @@ print(prediction)
 ############################## SINGLE DANDELION IMAGE ############################
 
 # upload original image - change image index to use new picture
-dan_image_index <- 24
+dan_image_index <- 1
 orig_dan_name <-paste("dandelions/",f_dande[dan_image_index],sep="")
 orig_dan <- image_load(orig_dan_name, target_size = target_size)
 orig_dan <- image_to_array(orig_dan)
@@ -74,12 +74,13 @@ plot(1:dim(orig_dan)[1], xlim=c(1,dim(orig_dan)[1]), ylim=c(1,dim(orig_dan)[2]),
 rasterImage(as.raster(orig_dan), 1, 1, dim(orig_dan)[1], dim(orig_dan)[2])
 
 # modify image
-pixel_budget <- 3
+pixel_budget <- 0.01
 mod_dan <- mod_image(orig_dan, pixel_budget=pixel_budget, type=1)
 
 # plot modified image
 plot(1:dim(mod_dan)[1], xlim=c(1,dim(mod_dan)[1]), ylim=c(1,dim(mod_dan)[2]), main=paste("Dandelion Image Index: ", dan_image_index,"\nModified with Pixel Budget = ", pixel_budget),type = "n", xlab = "", ylab = "", axes = FALSE)
 rasterImage(as.raster(mod_dan), 1, 1, dim(mod_dan)[1], dim(mod_dan)[2])
+#legend("bottomright", legend=c("Algorithm 1", "Algorithm 2","Algorithm 3","Algorithm 4","Algorithm 5"), lwd=2, col=c(rgb(1,1,0), rgb(0,1,0), rgb(0,0,1), rgb(1,0,1), rgb(0,1,1)))
 
 # make prediction using model
 mod_dan_pred <- array_reshape(mod_dan, c(1, dim(mod_dan)))
